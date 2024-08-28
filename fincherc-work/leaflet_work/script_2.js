@@ -13,15 +13,40 @@ let street = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(myMap);
 
-let topo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-  attribution:
-    'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-}).addTo(myMap);
+// let topo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+//   attribution:
+//     'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+// }).addTo(myMap);
 
 // Initialize arrays to hold the markers for sunny and overcast accidents
 // Create a new marker cluster group.
-let sunnyMarkers = L.markerClusterGroup();
-let overcastMarkers = L.markerClusterGroup();
+let sunnyMarkers = L.markerClusterGroup({
+  iconCreateFunction: function (cluster) {
+    return L.divIcon({
+      html:
+        '<div style="position: relative; width: 24px; height: 24px; text-align: center;">' +
+        '<ion-icon name="sunny" style="font-size: 24px;"></ion-icon>' +
+        '<span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 12px; color: black; font-weight: bold;">' +
+        cluster.getChildCount() +
+        "</span></div>",
+      className: "custom-cluster-icon"
+    });
+  }
+});
+
+let overcastMarkers = L.markerClusterGroup({
+  iconCreateFunction: function (cluster) {
+    return L.divIcon({
+      html:
+        '<div style="position: relative; width: 24px; height: 24px; text-align: center;">' +
+        '<ion-icon name="cloudy" style="font-size: 24px;"></ion-icon>' +
+        '<span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 12px; color: black; font-weight: bold;">' +
+        cluster.getChildCount() +
+        "</span></div>",
+      className: "custom-cluster-icon"
+    });
+  }
+});
 
 // Fetch the CSV file and parse it
 fetch("../../AustinTXAccidentsData2.csv")
@@ -43,7 +68,7 @@ fetch("../../AustinTXAccidentsData2.csv")
       let weather = accident["Weather_Condition"];
       let lat = parseFloat(accident["Start_Lat"]);
       let lng = parseFloat(accident["Start_Lng"]);
-      let severity = parseInt(accident["Severity"]); // Assuming severity is a field in the CSV
+      let severity = parseInt(accident["Severity"]);
       let startDate = accident["Start_Date"];
 
       //   console.log(weather);
@@ -70,6 +95,18 @@ fetch("../../AustinTXAccidentsData2.csv")
 
       let description = `Accident on ${startDate} under ${weather} conditions`;
 
+      //     sunLayer = L.geoJson(Data, {
+      //         pointToLayer: function (feature, latlng) {
+      //         return L.marker(latlng, {icon: sunIcon})
+      //         .bindPopup('<h5>'+feature.properties.weather.sunny+’</h5>'+feature.properties.base_name, {'className': ‘sun-popup'});
+      //         }
+      //     cloudLayer = L.geoJson(Data, {
+      //         pointToLayer: function (feature, latlng) {
+      //         return L.marker(latlng, {icon: cloudIcon})
+      //         .bindPopup('<h5>'+feature.properties.weather.cloudy+’</h5>'+feature.properties.base_name, {'className': ‘cloud-popup'});
+      //         }
+      //     });
+
       if (startDate.includes("2022")) {
         // console.log(
         //   `Processing accident: ${description}, Location: [${lat}, ${lng}]`
@@ -77,6 +114,7 @@ fetch("../../AustinTXAccidentsData2.csv")
         if (weather.includes("Clear") || weather.includes("Fair")) {
           // Set the data location property to a variable.
           let location = [lat, lng];
+
           // Check for the location property.
           if (location) {
             // Add a new marker to the cluster group, and bind a popup.
