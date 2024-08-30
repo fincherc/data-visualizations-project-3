@@ -111,16 +111,7 @@ fetch("../../AustinTXAccidentsData2.csv")
         // console.log(
         //   `Processing accident: ${description}, Location: [${lat}, ${lng}]`
         // );
-        if (weather.includes("Clear") || weather.includes("Fair")) {
-          // Set the data location property to a variable.
-          let location = [lat, lng];
-
-          // Check for the location property.
-          if (location) {
-            // Add a new marker to the cluster group, and bind a popup.
-            sunnyMarkers.addLayer(L.marker([lat, lng]).bindPopup(description));
-          }
-        } else if (weather.includes("Overcast") || weather.includes("Cloudy")) {
+        if (weather.includes("Overcast") || weather.includes("Cloudy")) {
           // Set the data location property to a variable.
           let location = [lat, lng];
           // Check for the location property.
@@ -143,3 +134,48 @@ fetch("../../AustinTXAccidentsData2.csv")
     );
   })
   .catch(error => console.error("Error loading or parsing CSV file:", error));
+
+// Create a custom legend control
+let legend = L.control({ position: "topright" });
+
+legend.onAdd = function (map) {
+  let div = L.DomUtil.create("div", "info legend");
+
+  // Add legend title
+  div.innerHTML += "<h4>Weather Conditions</h4>";
+
+  // Add legend items with checkboxes
+  div.innerHTML +=
+    '<div><input type="checkbox" id="sunny" checked>Sunny</label></div>';
+  div.innerHTML +=
+    '<div><input type="checkbox" id="overcast" checked><label for="overcast">Overcast</label></div>';
+
+  // Add event listeners to checkboxes
+  div.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+    checkbox.addEventListener("change", function () {
+      // Toggle visibility of markers based on checkbox state
+      let markerId = checkbox.id;
+      if (markerId === "sunny") {
+        if (checkbox.checked) {
+          myMap.addLayer(sunnyMarkers);
+        } else {
+          myMap.removeLayer(sunnyMarkers);
+        }
+      } else if (markerId === "overcast") {
+        if (checkbox.checked) {
+          myMap.addLayer(overcastMarkers);
+        } else {
+          myMap.removeLayer(overcastMarkers);
+        }
+      }
+    });
+  });
+
+  return div;
+};
+
+// Add the legend to the map
+legend.addTo(myMap);
+
+//Setup Min/Max Clusters
+//Consider Color coding for the markers
