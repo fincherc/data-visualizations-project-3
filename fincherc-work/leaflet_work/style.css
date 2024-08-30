@@ -10,4 +10,10 @@ body {
   html {
     height: 100%;
   }
-  
+
+  .legend {
+    background-color: rgba(255, 255, 255, 0.8); /* Adjust the color and opacity as needed */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
