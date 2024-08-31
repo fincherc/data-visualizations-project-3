@@ -15,12 +15,12 @@ let street = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 // Initialize arrays to hold the markers for sunny and overcast accidents
 // Create a new marker cluster group.
-let clearCloudyMarkers = L.markerClusterGroup({
+let fogMarkers = L.markerClusterGroup({
   iconCreateFunction: function (cluster) {
     return L.divIcon({
       html:
         '<div style="position: relative; width: 24px; height: 24px; text-align: center;">' +
-        '<ion-icon name="cloudy-outline" style="font-size: 24px;"></ion-icon>' +
+        '<ion-icon name="reorder-three-outline" style="font-size: 24px;"></ion-icon>' +
         '<span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 12px; color: black; font-weight: bold;">' +
         cluster.getChildCount() +
         "</span></div>",
@@ -96,78 +96,89 @@ fetch("../../AustinTXAccidentsData2.csv")
         continue;
       }
 
-      // Only process data from the year 2022
-      let year = new Date(startDate).getFullYear();
-      if (year !== 2022) {
-        continue;
-      }
-
       let description = `Accident on ${startDate} under ${weather} conditions`;
 
-      if (startDate.includes("2022")) {
-        // console.log(
-        //   `Processing accident: ${description}, Location: [${lat}, ${lng}]`
-        // );
+      // if (startDate.includes("2022")) {
+      // console.log(
+      //   `Processing accident: ${description}, Location: [${lat}, ${lng}]`
+      // );
 
-        // Conditions are as follows:
-        // 1. Cloudy/Clear/Overcast - this is usually where no weather conditions could hamper a person's driving ability
+      // Location information was used in all if statements, it can be placed outside of it
+      let location = [lat, lng];
+      if (!location) continue;
 
-        if (
-          // 2. Rain/Thunderstorms - this add another layer to a person's driving ability
-          weather.includes("Rain") ||
-          weather.includes("Drizzle") ||
-          weather.includes("Thunder") ||
-          weather.includes("T-Storm") ||
-          weather.includes("Mist") ||
-          !weather.includes("Freezing")
-        ) {
-          // Set the data location property to a variable.
-          let location = [lat, lng];
-          // Check for the location property.
-          if (location) {
-            // Add a new marker to the cluster group, and bind a popup.
-            badMarkers.addLayer(L.marker([lat, lng]).bindPopup(description));
-          }
-        } else if (
-          // 3. Fog/Mist/Haze - visibility inhibits and makes it harder to drive
-          weather.includes("Fog") ||
-          weather.includes("Haze")
-        ) {
-          // Set the data location property to a variable.
-          let location = [lat, lng];
-          // Check for the location property.
-          if (location) {
-            // Add a new marker to the cluster group, and bind a popup.
-            clearCloudyMarkers.addLayer(
-              L.marker([lat, lng]).bindPopup(description)
-            );
-          }
-        } else if (
-          // 4. Snow/Ice - Extremely difficult condition to drive in
-          weather.includes("Snow") ||
-          weather.includes("Freezing") ||
-          weather.includes("Ice") ||
-          weather.includes("Sleet")
-        ) {
-          // Set the data location property to a variable.
-          let location = [lat, lng];
-          // Check for the location property.
-          if (location) {
-            // Add a new marker to the cluster group, and bind a popup.
-            freezingMarkers.addLayer(
-              L.marker([lat, lng]).bindPopup(description)
-            );
-          }
-        }
+      // Conditions are as follows:
+      // 1. Cloudy/Clear/Overcast - this is usually where no weather conditions could hamper a person's driving ability
+
+      if (
+        // 2. Rain/Thunderstorms - this add another layer to a person's driving ability
+        weather.includes("Rain") ||
+        weather.includes("Drizzle") ||
+        weather.includes("Thunder") ||
+        weather.includes("T-Storm") ||
+        weather.includes("Mist")
+      ) {
+        let tStormIcon = L.divIcon({
+          html: '<ion-icon name="thunderstorm-outline" style="font-size: 24px;"></ion-icon>',
+          className: "single-custom-icon",
+          iconSize: [24, 24],
+          iconAnchor: [15, 30]
+        });
+
+        badMarkers
+          .addLayer(
+            L.marker([lat, lng], { icon: tStormIcon }).bindPopup(description)
+          )
+          .addTo(myMap);
+      } else if (
+        // 3. Fog/Mist/Haze - visibility inhibits and makes it harder to drive
+        weather.includes("Fog") ||
+        weather.includes("Haze")
+      ) {
+        let fogIcon = L.divIcon({
+          html: '<ion-icon name="reorder-three-outline" style="font-size: 24px;"></ion-icon>',
+          className: "single-custom-icon",
+          iconSize: [24, 24],
+          iconAnchor: [15, 30]
+        });
+
+        fogMarkers
+          .addLayer(
+            L.marker([lat, lng], { icon: fogIcon }).bindPopup(description)
+          )
+          .addTo(myMap);
+      } else if (
+        // 4. Snow/Ice - Extremely difficult condition to drive in
+        weather.includes("Snow") ||
+        weather.includes("Freezing") ||
+        weather.includes("Ice") ||
+        weather.includes("Sleet")
+      ) {
+        let snowIcon = L.divIcon({
+          html: '<ion-icon name="snow-outline" style="font-size: 24px;"></ion-icon>',
+          className: "single-custom-icon",
+          iconSize: [24, 24],
+          iconAnchor: [15, 30]
+        });
+
+        freezingMarkers
+          .addLayer(
+            L.marker([lat, lng], { icon: snowIcon }).bindPopup(description)
+          )
+          .addTo(myMap);
       }
+      // }
     }
 
-    // Add our marker cluster layer to the map.
-    myMap.addLayer(clearCloudyMarkers);
+    // Only display the bad weather markers
     myMap.addLayer(badMarkers);
-    myMap.addLayer(freezingMarkers);
+    // These layers should start as hidden
+    myMap.removeLayer(fogMarkers);
+    myMap.removeLayer(freezingMarkers);
 
-    console.log(`Inclement Weather markers: ${badMarkers.length}`);
+    // console.log(`Bad Weather markers: ${badMarkers.getLayers().length}`);
+    // console.log(`Foggy Weather markers: ${clearCloudyMarkers.getLayers().length}`);
+    // console.log(`Freezing Weather markers: ${freezingMarkers.getLayers().length}`);
   })
   .catch(error => console.error("Error loading or parsing CSV file:", error));
 
@@ -185,7 +196,7 @@ legend.onAdd = function (map) {
   div.innerHTML +=
     '<div><input type="checkbox" id="Rain & T-Storm" checked><label for="Rain & T-Storm">Rain & T-Storm</label></div>';
   div.innerHTML +=
-    '<div><input type="checkbox" id="Freezing" checked><label for="Freezing">Freezing</label></div>';
+    '<div><input type="checkbox" id="Freezing"><label for="Freezing">Freezing</label></div>';
 
   // Add event listeners to checkboxes
   div.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
@@ -194,9 +205,9 @@ legend.onAdd = function (map) {
       let markerId = checkbox.id;
       if (markerId === "Foggy") {
         if (checkbox.checked) {
-          myMap.addLayer(clearCloudyMarkers);
+          myMap.addLayer(fogMarkers);
         } else {
-          myMap.removeLayer(clearCloudyMarkers);
+          myMap.removeLayer(fogMarkers);
         }
       } else if (markerId === "Rain & T-Storm") {
         if (checkbox.checked) {
@@ -222,3 +233,4 @@ legend.addTo(myMap);
 
 //Setup Min/Max Clusters???
 //Consider Color coding for the markers
+//Add icon to single marker that is displayed
