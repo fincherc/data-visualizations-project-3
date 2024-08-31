@@ -95,18 +95,6 @@ fetch("../../AustinTXAccidentsData2.csv")
 
       let description = `Accident on ${startDate} under ${weather} conditions`;
 
-      //     sunLayer = L.geoJson(Data, {
-      //         pointToLayer: function (feature, latlng) {
-      //         return L.marker(latlng, {icon: sunIcon})
-      //         .bindPopup('<h5>'+feature.properties.weather.sunny+’</h5>'+feature.properties.base_name, {'className': ‘sun-popup'});
-      //         }
-      //     cloudLayer = L.geoJson(Data, {
-      //         pointToLayer: function (feature, latlng) {
-      //         return L.marker(latlng, {icon: cloudIcon})
-      //         .bindPopup('<h5>'+feature.properties.weather.cloudy+’</h5>'+feature.properties.base_name, {'className': ‘cloud-popup'});
-      //         }
-      //     });
-
       if (startDate.includes("2022")) {
         // console.log(
         //   `Processing accident: ${description}, Location: [${lat}, ${lng}]`
