@@ -15,12 +15,12 @@ let street = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 // Initialize arrays to hold the markers for sunny and overcast accidents
 // Create a new marker cluster group.
-let sunnyMarkers = L.markerClusterGroup({
+let clearCloudyMarkers = L.markerClusterGroup({
   iconCreateFunction: function (cluster) {
     return L.divIcon({
       html:
         '<div style="position: relative; width: 24px; height: 24px; text-align: center;">' +
-        '<ion-icon name="sunny" style="font-size: 24px;"></ion-icon>' +
+        '<ion-icon name="cloudy-outline" style="font-size: 24px;"></ion-icon>' +
         '<span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 12px; color: black; font-weight: bold;">' +
         cluster.getChildCount() +
         "</span></div>",
@@ -29,12 +29,26 @@ let sunnyMarkers = L.markerClusterGroup({
   }
 });
 
-let overcastMarkers = L.markerClusterGroup({
+let badMarkers = L.markerClusterGroup({
   iconCreateFunction: function (cluster) {
     return L.divIcon({
       html:
         '<div style="position: relative; width: 24px; height: 24px; text-align: center;">' +
-        '<ion-icon name="cloudy" style="font-size: 24px;"></ion-icon>' +
+        '<ion-icon name="thunderstorm-outline" style="font-size: 24px;"></ion-icon>' +
+        '<span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 12px; color: black; font-weight: bold;">' +
+        cluster.getChildCount() +
+        "</span></div>",
+      className: "custom-cluster-icon"
+    });
+  }
+});
+
+let freezingMarkers = L.markerClusterGroup({
+  iconCreateFunction: function (cluster) {
+    return L.divIcon({
+      html:
+        '<div style="position: relative; width: 24px; height: 24px; text-align: center;">' +
+        '<ion-icon name="snow-outline" style="font-size: 24px;"></ion-icon>' +
         '<span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 12px; color: black; font-weight: bold;">' +
         cluster.getChildCount() +
         "</span></div>",
@@ -94,13 +108,53 @@ fetch("../../AustinTXAccidentsData2.csv")
         // console.log(
         //   `Processing accident: ${description}, Location: [${lat}, ${lng}]`
         // );
-        if (weather.includes("Overcast") || weather.includes("Cloudy")) {
+
+        // Conditions are as follows:
+        // 1. Cloudy/Clear/Overcast - this is usually where no weather conditions could hamper a person's driving ability
+
+        if (
+          // 2. Rain/Thunderstorms - this add another layer to a person's driving ability
+          weather.includes("Rain") ||
+          weather.includes("Drizzle") ||
+          weather.includes("Thunder") ||
+          weather.includes("T-Storm") ||
+          weather.includes("Mist") ||
+          !weather.includes("Freezing")
+        ) {
           // Set the data location property to a variable.
           let location = [lat, lng];
           // Check for the location property.
           if (location) {
             // Add a new marker to the cluster group, and bind a popup.
-            overcastMarkers.addLayer(
+            badMarkers.addLayer(L.marker([lat, lng]).bindPopup(description));
+          }
+        } else if (
+          // 3. Fog/Mist/Haze - visibility inhibits and makes it harder to drive
+          weather.includes("Fog") ||
+          weather.includes("Haze")
+        ) {
+          // Set the data location property to a variable.
+          let location = [lat, lng];
+          // Check for the location property.
+          if (location) {
+            // Add a new marker to the cluster group, and bind a popup.
+            clearCloudyMarkers.addLayer(
+              L.marker([lat, lng]).bindPopup(description)
+            );
+          }
+        } else if (
+          // 4. Snow/Ice - Extremely difficult condition to drive in
+          weather.includes("Snow") ||
+          weather.includes("Freezing") ||
+          weather.includes("Ice") ||
+          weather.includes("Sleet")
+        ) {
+          // Set the data location property to a variable.
+          let location = [lat, lng];
+          // Check for the location property.
+          if (location) {
+            // Add a new marker to the cluster group, and bind a popup.
+            freezingMarkers.addLayer(
               L.marker([lat, lng]).bindPopup(description)
             );
           }
@@ -109,12 +163,11 @@ fetch("../../AustinTXAccidentsData2.csv")
     }
 
     // Add our marker cluster layer to the map.
-    myMap.addLayer(sunnyMarkers);
-    myMap.addLayer(overcastMarkers);
+    myMap.addLayer(clearCloudyMarkers);
+    myMap.addLayer(badMarkers);
+    myMap.addLayer(freezingMarkers);
 
-    console.log(
-      `Sunny markers: ${sunnyMarkers.length}, Overcast markers: ${overcastMarkers.length}`
-    );
+    console.log(`Inclement Weather markers: ${badMarkers.length}`);
   })
   .catch(error => console.error("Error loading or parsing CSV file:", error));
 
@@ -128,27 +181,34 @@ legend.onAdd = function (map) {
   div.innerHTML += "<h4>Weather Conditions</h4>";
 
   // Add legend items with checkboxes
+  div.innerHTML += '<div><input type="checkbox" id="Foggy">Foggy</label></div>';
   div.innerHTML +=
-    '<div><input type="checkbox" id="sunny" checked>Sunny</label></div>';
+    '<div><input type="checkbox" id="Rain & T-Storm" checked><label for="Rain & T-Storm">Rain & T-Storm</label></div>';
   div.innerHTML +=
-    '<div><input type="checkbox" id="overcast" checked><label for="overcast">Overcast</label></div>';
+    '<div><input type="checkbox" id="Freezing" checked><label for="Freezing">Freezing</label></div>';
 
   // Add event listeners to checkboxes
   div.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
     checkbox.addEventListener("change", function () {
       // Toggle visibility of markers based on checkbox state
       let markerId = checkbox.id;
-      if (markerId === "sunny") {
+      if (markerId === "Foggy") {
         if (checkbox.checked) {
-          myMap.addLayer(sunnyMarkers);
+          myMap.addLayer(clearCloudyMarkers);
         } else {
-          myMap.removeLayer(sunnyMarkers);
+          myMap.removeLayer(clearCloudyMarkers);
         }
-      } else if (markerId === "overcast") {
+      } else if (markerId === "Rain & T-Storm") {
         if (checkbox.checked) {
-          myMap.addLayer(overcastMarkers);
+          myMap.addLayer(badMarkers);
         } else {
-          myMap.removeLayer(overcastMarkers);
+          myMap.removeLayer(badMarkers);
+        }
+      } else if (markerId === "Freezing") {
+        if (checkbox.checked) {
+          myMap.addLayer(freezingMarkers);
+        } else {
+          myMap.removeLayer(freezingMarkers);
         }
       }
     });
@@ -160,5 +220,5 @@ legend.onAdd = function (map) {
 // Add the legend to the map
 legend.addTo(myMap);
 
-//Setup Min/Max Clusters
+//Setup Min/Max Clusters???
 //Consider Color coding for the markers
