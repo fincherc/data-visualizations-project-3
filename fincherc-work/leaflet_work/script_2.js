@@ -48,6 +48,8 @@ let overcastMarkers = L.markerClusterGroup({
   }
 });
 
+let heatArray = []
+
 // Fetch the CSV file and parse it
 fetch("../../AustinTXAccidentsData2.csv")
   .then(response => response.text())
@@ -123,11 +125,20 @@ fetch("../../AustinTXAccidentsData2.csv")
           }
         }
       }
+    heatArray.push([lat, lng]);
     }
 
+    // console.log(heatArray)
+    
+    let heat = L.heatLayer(heatArray, {
+      radius: 20,
+      blur: 25
+    });
+    
     // Add our marker cluster layer to the map.
     myMap.addLayer(sunnyMarkers);
     myMap.addLayer(overcastMarkers);
+    myMap.addLayer(heat);
 
     console.log(
       `Sunny markers: ${sunnyMarkers.length}, Overcast markers: ${overcastMarkers.length}`
@@ -149,6 +160,8 @@ legend.onAdd = function (map) {
     '<div><input type="checkbox" id="sunny" checked>Sunny</label></div>';
   div.innerHTML +=
     '<div><input type="checkbox" id="overcast" checked><label for="overcast">Overcast</label></div>';
+  div.innerHTML +=
+    '<div><input type="checkbox" id="heat" checked><label for="heat">Heat</label></div>';
 
   // Add event listeners to checkboxes
   div.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
@@ -161,14 +174,30 @@ legend.onAdd = function (map) {
         } else {
           myMap.removeLayer(sunnyMarkers);
         }
-      } else if (markerId === "overcast") {
+      } 
+      
+      else if (markerId === "overcast") {
         if (checkbox.checked) {
           myMap.addLayer(overcastMarkers);
-        } else {
-          myMap.removeLayer(overcastMarkers);
+        }
+        else {
+          myMap.removeLayer(overcastMarkers)
         }
       }
-    });
+        
+      else if (markerId === "heat") {
+        if (checkbox.checked) {
+          myMap.addLayer(heat);
+        } else {
+          myMap.removeLayer(heat)
+        }
+      }
+
+        // else {
+        //   myMap.removeLayer(overcastMarkers);
+        // }
+      }
+    );
   });
 
   return div;
