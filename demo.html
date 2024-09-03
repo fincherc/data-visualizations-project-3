@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Plots</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the custom CSS file -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Load Plotly JS -->
+</head>
+<body>
+
+    <!-- Title section -->
+    <div class="container-fluid bg-light py-4 text-center">
+        <h2 class="mb-3">Austin Traffic Accidents Time Trends & Geographics Analysis</h2>
+        <p class="lead mb-4">Use the interactive charts below to explore the dataset</p>
+        
+        <!-- Button group for switching views -->
+        <div class="btn-group mb-4" role="group" aria-label="View Selector">
+            <button type="button" class="btn btn-secondary" onclick="showView('plot1')">View 1</button>
+            <button type="button" class="btn btn-secondary" onclick="showView('plot2')">View 2</button>
+            <button type="button" class="btn btn-secondary" onclick="showView('plot3')">View 3</button>
+            <button type="button" class="btn btn-secondary" onclick="showView('plot4')">View 4</button>
+            <button type="button" class="btn btn-secondary" onclick="showView('plot5')">View 5</button>
+        </div>
+    </div>
+
+    <!-- Containers for each plot -->
+    <div class="plot-container" id="plot1"></div> <!-- Display this plot by default -->
+    <div class="plot-container" id="plot2" style="display: none;"></div>
+    <div class="plot-container" id="plot3" style="display: none;"></div>
+    <div class="plot-container" id="plot4" style="display: none;"></div>
+    <div class="plot-container" id="plot5" style="display: none;"></div>
+
+    <script src="plots.js"></script> <!-- Link to a JS file that loads and renders the plots -->
+</body>
+</html>

@@ -1,0 +1,54 @@
+/* Basic styling for body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Center title and subtitle */
+.container-fluid {
+    text-align: center;
+    margin-bottom: 5px; /* Reduce bottom margin to bring button group closer */
+}
+
+/* Center plots with specific size */
+.plot-container {
+    width: 100%;         /* Allow full width to accommodate large plot size */
+    max-width: 1280px;   /* Match the plot width for common resolutions */
+    margin: 10px auto;   /* Reduce vertical margins to decrease spacing */
+    padding: 5px;       /* Add padding inside the plot containers */
+    background-color: white; /* Set a white background for plot containers */
+    border-radius: 8px;  /* Rounded corners for the plot containers */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for a 3D effect */
+    /* overflow: hidden;    Prevent overflow if content exceeds container bounds */
+}
+
+/* Header style */
+h1 {
+    color: #333; /* Dark gray color for all headings */
+    text-align: center; /* Center-align all headings */
+    margin-bottom: 5px; /* Reduce bottom margin to bring subtitle closer */
+}
+
+p.lead {
+    margin-bottom: 10px; /* Reduce bottom margin to bring button group closer */
+}
+
+/* Button styling */
+.btn-group {
+    margin-bottom: 5px; /* Reduce bottom margin to bring plot closer */
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px; /* Reduce button margins for tighter grouping */
+    background-color: #007bff; /* Blue background */
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none; /* Remove border */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
