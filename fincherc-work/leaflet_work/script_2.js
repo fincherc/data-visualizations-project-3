@@ -57,7 +57,7 @@ let freezingMarkers = L.markerClusterGroup({
   }
 });
 
-let heatArray = []
+let heatArray = [] // An empty array to hold coordinates for the heatmap
 
 // Fetch the CSV file and parse it
 fetch("../../AustinTXAccidentsData2.csv")
@@ -170,19 +170,31 @@ fetch("../../AustinTXAccidentsData2.csv")
           .addTo(myMap);
       }
       // }
+    
+      heatArray.push([lat,lng]); // Add the coordinates to the array for the heatmap
+    
     }
+
+
 
     // Only display the bad weather markers
     myMap.addLayer(badMarkers);
     // These layers should start as hidden
     myMap.removeLayer(fogMarkers);
     myMap.removeLayer(freezingMarkers);
+    myMap.removeLayer(heatmap);
 
     // console.log(`Bad Weather markers: ${badMarkers.getLayers().length}`);
     // console.log(`Foggy Weather markers: ${clearCloudyMarkers.getLayers().length}`);
     // console.log(`Freezing Weather markers: ${freezingMarkers.getLayers().length}`);
   })
   .catch(error => console.error("Error loading or parsing CSV file:", error));
+
+// Build the heatmap layer. This one wouldn't work unless it was on the top layer of the script and I'm not sure why.
+let heatmap = L.heatLayer(heatArray, {
+  radius: 15,
+  blur: 25
+}).addTo(myMap);
 
 // Create a custom legend control
 let legend = L.control({ position: "topright" });
@@ -199,6 +211,8 @@ legend.onAdd = function (map) {
     '<div><input type="checkbox" id="Rain & T-Storm" checked><label for="Rain & T-Storm">Rain & T-Storm</label></div>';
   div.innerHTML +=
     '<div><input type="checkbox" id="Freezing"><label for="Freezing">Freezing</label></div>';
+  div.innerHTML += '<div><input type="checkbox" id="heat">All Accidents (heatmap)</label></div>';
+
 
   // Add event listeners to checkboxes
   div.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
@@ -222,9 +236,15 @@ legend.onAdd = function (map) {
           myMap.addLayer(freezingMarkers);
         } else {
           myMap.removeLayer(freezingMarkers);
+        } 
+      } else if (markerId === "heat") {
+        if (checkbox.checked) {
+          myMap.addLayer(heatmap); // When the browser gets to here, it's telling me 'heatmap' is undefined.
+        } else {
+          myMap.removeLayer(heatmap);
         }
-      }
-    );
+      };
+    });
   });
 
   return div;
