@@ -23,13 +23,13 @@ The dataset was cleaned by Jamey Yadon via PostgreSQL.
 
 The file "main_index.html" will lead you to our Main Page. Here you can browse through, click, or go back, just like a typical website.
 
-    From the Main Page - if you click on the first option - Leaflet Accident Demo - this will bring you to our heat map where you can interact by clicking different weather conditions to check out the accidents which occured within these weather conditions.
+From the Main Page - if you click on the first option - Leaflet Accident Demo - this will bring you to our heat map where you can interact by clicking different weather conditions to check out the accidents which occured within these weather conditions.
 
-    From the Main Page - if you click on the second option - Timeseries Plots - here you will find five different clickable views of charts based off time trends and geographics. (See Timeseries for more info on views)
+From the Main Page - if you click on the second option - Timeseries Plots - here you will find five different clickable views of charts based off time trends and geographics. (See Timeseries for more info on views)
 
-    From the Main Page - if you click on the third option - Heat Circle Marker Map - this will lead you to a map containing all the accidents which occured. It looks very busy from afar, but if you zoom in, you will see that accidents have happened at almost every intersection.
+From the Main Page - if you click on the third option - Heat Circle Marker Map - this will lead you to a map containing all the accidents which occured. It looks very busy from afar, but if you zoom in, you will see that accidents have happened at almost every intersection.
 
-    From the Main Page - if you click on the fourth option - Heat Marker Map - here you will see a similar map but organized nicer with the markers. As you zoom in, you can again see all the accidents which occured and where.
+From the Main Page - if you click on the fourth option - Heat Marker Map - here you will see a similar map but organized nicer with the markers. As you zoom in, you can again see all the accidents which occured and where.
 
 The file "combined_plots.html" is where you will find a website containing all interactive charts and graphs in which you can click between different counties, years, severity levels, week vs weekend, zip codes, etc. There are some awesome charts on here that will allow you the reach any findings you are looking for from this dataset - clear and consice.
 
