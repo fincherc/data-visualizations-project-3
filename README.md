@@ -23,8 +23,11 @@ The dataset was cleaned by Jamey Yadon via PostgreSQL.
 
 The file "main_index.html" will lead you to our Main Page. Here you can browse through, click, or go back, just like a typical website.
 
-From the Main Page - if you click on the first option - Leaflet Accident Demo - this will bring you to our heat map where you can interact by clicking different weather conditions to check out the accidents which occured within these weather conditions.
+From the Main Page - if you click on the first option - Leaflet Accident Demo - this will bring you to our heat map where you can interact by clicking different weather conditions to check out the accidents which occured within these weather conditions. 
 
+From the Main Page - if you click on the second option - Timeseries Plots - here you will find five different clickable views of charts based off time trends and geographics. 
+    
+From the Main Page - if you click on the third option - Heat Circle Marker Map - this will lead you to a map containing all the accidents which occured. It looks very busy from afar, but if you zoom in, you will see that accidents have happened at almost every intersection. 
 From the Main Page - if you click on the second option - Timeseries Plots - here you will find five different clickable views of charts based off time trends and geographics. (See Timeseries for more info on views)
 
 From the Main Page - if you click on the third option - Heat Circle Marker Map - this will lead you to a map containing all the accidents which occured. It looks very busy from afar, but if you zoom in, you will see that accidents have happened at almost every intersection.
