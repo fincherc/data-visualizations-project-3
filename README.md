@@ -74,6 +74,10 @@ For visualization, we employed Plotly to create dynamic, interactive views from 
 
 Throughout this project, we wanted to be sure to avoid misleading representations. We made sure to ensure that our visualizations accurately are reflecting the data. It is also really important to remember that any conclusions drawn from the data apply to Austin, TX only. They may or may not be applicable to other cities, and definitely aren't applicable to people who live in rural areas. We wanted to avoid overgeneralization by straying away from certain visualizations such as zipcode, since we are not considering population and considering per capita.
 
+An ethical concern tied to public safety and awareness is the lack of public awareness regarding the increased dangers posed by specific weather conditions (e.g., rain, fog, thunderstorms) can contribute to accidents. Vulnerable populations, such as new drivers or those unfamiliar with certain areas, may be disproportionately affected. Austin may not be a great example from this data due to weather because there is not enough harsh weather concerns in this area to specifically prove that it is causing worse accidents. However, other areas are definitely effected dramatically from harsh weather conditions. 
+
+We encourage implementing public safety campaigns focused on educating drivers about the dangers of adverse weather conditions. These campaigns should provide clear guidance on how to adjust driving behavior during rain, fog, and ice. Public announcements via radio, social media, and billboards can inform people of hazardous weather conditions in real time.
+
 ## References:
 
 ### Dataset of study:
@@ -104,7 +108,7 @@ This project provided some important insights into the situation with car accide
 - The highways are a highly accident-prone area, and are causing the highest severity of accidents.
 - Accidents happen at almost every intersection -- which shows us you have to be careful no matter where you are driving.
 - Accidents decreased drastically in the beginning of 2020 (COVID -- people were driving less), but also increased by 2021 and took another large decrease beginning of 2022
-- More accdents occur between 7-9 AM (CST) and again between 5-6 PM (CST) most likely due to more people being on the road during those hours because of the typical work schedule
+- More accidents occur between 7-9 AM (CST) and again between 5-6 PM (CST) most likely due to more people being on the road during those hours because of the typical work schedule
 - On weekends, there are more accidents between the hours of 11 AM - 3 PM (CST)
 - More accidents occured in September, October, November, and December
 - Most of the accidents with severity level of 4, occured along the I-35
